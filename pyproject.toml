@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 pytest = "^8.2.2"
+pandas = "^2.2.2"
+python-dotenv = "^1.0.1"
+openpyxl = "^3.1.4"
 
 
 [tool.poetry.group.lint.dependencies]
