@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 
 import pandas as pd
 
@@ -42,10 +43,22 @@ def get_all_expenses(df: pd.DataFrame) -> list[dict]:
     return result
 
 
-def get_top_transactions(df: pd.DataFrame) -> list[dict]:
+def get_top_transactions(df: pd.DataFrame, n: int = 5) -> list[dict]:
     """ Принимает DataFrame с банковскими операциями, возвращает список словарей,
     top 5 транзакций"""
-    pass
+    if df.empty:
+        return []
+    top_n = df.sort_values(by='Сумма платежа', ascending=False).head(n).to_dict(orient='records')
+    result = []
+    for item in top_n:
+        result.append({
+            'date': item.get('Дата платежа'),
+            'amount': item.get('Сумма операции'),
+            'category': item.get('Категория'),
+            'description': item.get('Описание'),
+
+        })
+    return result
 
 
 if __name__ == '__main__':
@@ -53,4 +66,4 @@ if __name__ == '__main__':
     # df = get_data_from_excel(os.path.join(PATH_TO_DATA, 'empty.xlsx'))
     df = get_data_from_excel(os.path.join(PATH_TO_DATA, 'operations.xlsx'))
     list_dict = get_top_transactions(df)
-    print(list_dict)
+    pprint(list_dict, indent=4, sort_dicts=False)
