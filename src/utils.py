@@ -20,3 +20,7 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
     else:
         print("Файл не найден.")
         return []
+
+
+res = get_data_from_excel('test_excel.xlsx')
+print(res)
