@@ -15,7 +15,7 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
             return result
         except Exception as ex:
             print(ex)
-            return []
+            return pd.DataFrame()
     else:
         print("Файл не найден.")
-        return []
+        return pd.DataFrame()
