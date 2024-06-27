@@ -1,7 +1,6 @@
 import os.path
 
 import pandas as pd
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +19,3 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
     else:
         print("Файл не найден.")
         return []
-
-
-
