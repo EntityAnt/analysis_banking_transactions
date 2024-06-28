@@ -1,14 +1,11 @@
-import csv
-import json
 import os
 from datetime import datetime
-from pprint import pprint
 
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 
 from src.logger import setup_logging
-from src.utils import get_data_from_excel
+from src.utils import get_data_from_excel, get_date_n_months_later
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -79,16 +76,6 @@ def spending_by_category(df: pd.DataFrame, category: str, date: str = None) -> p
     return filtered_df_by_category
 
 
-def get_date_n_months_later(str_date: str, n: int = 3) -> datetime:
-    """ Принимает строку с датой в формате DD.MM.YYYY, возвращает дату n-месяцами ранее"""
-    try:
-        date = datetime.strptime(str_date, '%d.%m.%Y')
-        new_date = date + relativedelta(months=-n)
-    except Exception as ex:
-        print(ex)
-        return None
-
-    return new_date
 
 
 if __name__ == "__main__":
