@@ -1,29 +1,15 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from pprint import pprint
 from typing import Any, Dict, List
 
 import pandas as pd
 
 from src.logger import setup_logging
-from src.utils import get_data_from_excel
+from src.utils import get_data_from_excel, get_start_end_month, transactions_from_df, round_to_limit
 
 logger = setup_logging(f'services.py - {datetime.today().strftime("%Y-%m-%d")}')
-
-
-def get_start_end_month(date: str) -> tuple():
-    """Принимает строку с датой в формате 'YYYY-MM-DD', возвращает кортеж с датами начала и конца месяца"""
-
-    start = datetime.strptime(date, "%Y-%m-%d")
-    year = start.year
-    month = start.month
-    if month != 12:
-        end = datetime.strptime(f"{year}-{month + 1}-01", "%Y-%m-%d") - timedelta(days=1)
-    else:
-        end = datetime.strptime(f"{year + 1}-01-01", "%Y-%m-%d") - timedelta(days=1)
-
-    return start, end
 
 
 def analysis_categories_cashback(data: pd.DataFrame, year: int, month: int) -> json:
@@ -49,31 +35,6 @@ def analysis_categories_cashback(data: pd.DataFrame, year: int, month: int) -> j
     return json.dumps(result, ensure_ascii=False)
 
 
-def transactions_from_df(df: pd.DataFrame) -> list[dict]:
-    """Принимает DataFrame, возвращает список словарей с датой операции и суммой"""
-
-    data = df.to_dict(orient="records")
-    result = []
-    for item in data:
-        result.append(
-            {
-                "Дата операции": datetime.strptime(item.get("Дата операции"), "%d.%m.%Y %H:%M:%S").strftime(
-                    "%Y-%m-%d"
-                ),
-                "Сумма операции": item.get("Сумма операции"),
-            }
-        )
-    logger.info('Сформированы данные с датой операции и суммой')
-    return result
-
-
-def round_to_limit(amount: float, limit: int) -> float:
-    """Принимает сумму и лимит, до которого надо округлить,
-    возвращает разницу между исходной и округленной суммами"""
-    result = amount + (limit - amount % limit)
-    return round(result - amount, 2)
-
-
 def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) -> float:
     """Принимает месяц ('YYYY-MM'), список словарей и предел, до которого нужно округлять суммы операций.
     Возвращает сумму, которую удалось бы отложить в «Инвесткопилку»."""
@@ -84,7 +45,7 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
         date = datetime.strptime(transaction.get("Дата операции"), "%Y-%m-%d")
 
         if start <= date <= end:
-            all_amount += round(round_to_limit(transaction.get("Сумма операции"), limit),2)
+            all_amount += round(round_to_limit(transaction.get("Сумма операции"), limit), 2)
     logger.info(f'С {start} по {end} удалось бы накопить {all_amount} руб.')
     return all_amount
 
