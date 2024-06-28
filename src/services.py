@@ -6,7 +6,10 @@ from typing import Any, Dict, List
 
 import pandas as pd
 
+from src.logger import setup_logging
 from src.utils import get_data_from_excel
+
+logger = setup_logging(f'services.py - {datetime.today().strftime("%Y-%m-%d")}')
 
 
 def get_start_end_month(date: str) -> tuple():
@@ -29,8 +32,9 @@ def analysis_categories_cashback(data: pd.DataFrame, year: int, month: int) -> j
 
     start_month = datetime.strptime(f"{year}-{month}-01", "%Y-%m-%d")
     end_month = get_start_end_month(start_month.strftime("%Y-%m-%d"))[1]
-
+    logger.info(f'Анализ кешбэка по категориям - выбран период: с {start_month} по {end_month}')
     if data.empty:
+        logger.warning('Анализ кешбэка по категориям - DataFrame пуст!')
         return {}
 
     data["Дата платежа"] = pd.to_datetime(data["Дата платежа"], dayfirst=True)
@@ -40,6 +44,8 @@ def analysis_categories_cashback(data: pd.DataFrame, year: int, month: int) -> j
     result = {}
     for index, row in sort_data.head(3).iterrows():
         result[index] = float(row["Кэшбэк"])
+        logger.info(f'{index}:  {float(row["Кэшбэк"])}')
+
     return json.dumps(result, ensure_ascii=False)
 
 
@@ -57,6 +63,7 @@ def transactions_from_df(df: pd.DataFrame) -> list[dict]:
                 "Сумма операции": item.get("Сумма операции"),
             }
         )
+    logger.info('Сформированы данные с датой операции и суммой')
     return result
 
 
@@ -77,13 +84,14 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
         date = datetime.strptime(transaction.get("Дата операции"), "%Y-%m-%d")
 
         if start <= date <= end:
-            all_amount += round_to_limit(transaction.get("Сумма операции"), limit)
-
-    return round(all_amount, 2)
+            all_amount += round(round_to_limit(transaction.get("Сумма операции"), limit),2)
+    logger.info(f'С {start} по {end} удалось бы накопить {all_amount} руб.')
+    return all_amount
 
 
 if __name__ == "__main__":
     data = get_data_from_excel(os.path.join(os.getenv("PATH_TO_DATA"), "operations.xlsx"))
     transactions = transactions_from_df(data)
+    analysis_categories_cashback(data, 2021, 10)
     pprint(investment_bank("2018-10", transactions, 50), indent=4)
     # print(get_start_end_month('2018-12-08'))
