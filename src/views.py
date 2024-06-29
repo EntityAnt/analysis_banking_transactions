@@ -1,13 +1,11 @@
 import os
 from datetime import datetime
-from pprint import pprint
 
 import pandas as pd
-import requests
 from dotenv import load_dotenv
 
 from src.logger import setup_logging
-from src.utils import get_data_from_excel, get_stock_price, currency_exchange_rate, get_beginning_month
+from src.utils import currency_exchange_rate, get_beginning_month, get_stock_price
 
 load_dotenv()
 PATH_TO_DATA = os.getenv("PATH_TO_DATA")
@@ -28,7 +26,7 @@ def get_greeting(date: str) -> str:
         greeting = "Добрый день"
     elif hour in range(18, 24):
         greeting = "Добрый вечер"
-    logger.info(f'get_greeting - Выбрано время {hour}:{minute} это {greeting.split()[1]}')
+    logger.info(f"get_greeting - Выбрано время {hour}:{minute} это {greeting.split()[1]}")
     return greeting
 
 
@@ -42,7 +40,7 @@ def get_all_expenses(df: pd.DataFrame) -> list[dict]:
     dict_data = expenses.to_dict().get("Сумма операции")
     for key, item in dict_data.items():
         result.append({"last_digits": key[-4:], "total_spent": item * -1, "cashback": round(item / -100, 2)})
-        logger.info(f'get_all_expenses - По карте: {key[-4:]}, расходы: {item}, кешбэк: {round(item / -100, 2)}')
+        logger.info(f"get_all_expenses - По карте: {key[-4:]}, расходы: {item}, кешбэк: {round(item / -100, 2)}")
 
     return result
 
@@ -55,7 +53,7 @@ def get_top_n_transactions(df: pd.DataFrame, is_debit=None, date=None, n: int = 
         is_debit = False
 
     if date is None:
-        logger.info('Выбрана текущая дата')
+        logger.info("Выбрана текущая дата")
         date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
         beginning = get_beginning_month(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         beginning = pd.to_datetime(beginning, dayfirst=True)
@@ -65,25 +63,26 @@ def get_top_n_transactions(df: pd.DataFrame, is_debit=None, date=None, n: int = 
             beginning = pd.to_datetime(get_beginning_month(date), dayfirst=True)
             date = pd.to_datetime(date, dayfirst=True)
         except Exception as ex:
-            logger.warning(f'Не верный формат даты {ex}')
+            logger.warning(f"Не верный формат даты {ex}")
             return []
     if df.empty:
-        logger.warning('get_top_n_transactions - DataFrame пуст!')
+        logger.warning("get_top_n_transactions - DataFrame пуст!")
         return []
 
     df["Дата платежа"] = pd.to_datetime(df["Дата платежа"], dayfirst=True)
     filtered_df_by_data = df[(df["Дата платежа"].between(beginning, date))]
-    logger.info(f'Получены данные за период с {beginning} по {date}')
+    logger.info(f"Получены данные за период с {beginning} по {date}")
+    pd.options.mode.chained_assignment = None  # Подавляем предупреждение SettingWithCopyWarning
     filtered_df_by_data["Дата платежа"] = filtered_df_by_data["Дата платежа"].dt.strftime("%d.%m.%Y")
     if is_debit:
         logger.info('Выбран режим: "Доходы"')
-        filtered_by_payment = filtered_df_by_data.loc[filtered_df_by_data['Сумма платежа'] > 0]
+        filtered_by_payment = filtered_df_by_data.loc[filtered_df_by_data["Сумма платежа"] > 0]
     else:
         logger.info('Выбран режим: "Расходы"')
-        filtered_by_payment = filtered_df_by_data.loc[filtered_df_by_data['Сумма платежа'] < 0]
+        filtered_by_payment = filtered_df_by_data.loc[filtered_df_by_data["Сумма платежа"] < 0]
 
     top_n = filtered_by_payment.sort_values(by="Сумма платежа", ascending=False).head(n).to_dict(orient="records")
-    logger.info(f'Данные отсортированы по Сумме платежа')
+    logger.info("Данные отсортированы по Сумме платежа")
 
     result = []
     for item in top_n:
@@ -95,7 +94,7 @@ def get_top_n_transactions(df: pd.DataFrame, is_debit=None, date=None, n: int = 
                 "description": item.get("Описание"),
             }
         )
-    logger.info(f'Получено Top - {n} транзакций за период с {beginning} по {date}')
+    logger.info(f"Получено Top - {n} транзакций за период с {beginning} по {date}")
     return result
 
 
@@ -107,7 +106,7 @@ def get_exchange_rates(currencies: list = None) -> list[dict]:
     result = []
     for currency in currencies:
         result.append({"currency": currency, "rate": round(currency_exchange_rate(currency), 2)})
-        logger.info(f'Сформированы данные с курсами валют')
+        logger.info("Сформированы данные с курсами валют")
 
     return result
 
@@ -121,15 +120,5 @@ def get_stocks_prices(stocks: list = None) -> list[dict]:
     for stock in stocks:
         price = get_stock_price(stock)
         result.append({"stock": stock, "price": price})
-        logger.info(f'Курс акции {stock} - {price}')
+        logger.info(f"Курс акции {stock} - {price}")
     return result
-
-
-if __name__ == "__main__":
-    get_greeting('31.12.2021 16:44:00')
-    # df = get_data_from_excel(os.path.join(PATH_TO_DATA, 'operations.xlsx'))
-    # print(get_all_expenses(df))
-    # list_dict = get_stocks_prices()
-    # pprint(list_dict, indent=4)
-    # pprint(list_dict, indent=4, sort_dicts=False)
-    # pprint(get_top_n_transactions(df, is_debit=True, date='30.06.2021 16:44:00'))

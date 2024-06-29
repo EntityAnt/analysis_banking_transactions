@@ -3,7 +3,6 @@ from datetime import datetime
 
 import pandas as pd
 import requests
-
 from dotenv import load_dotenv
 
 from src.logger import setup_logging
@@ -20,13 +19,13 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
     if os.path.isfile(path):
         try:
             result = pd.read_excel(path)
-            logger.info(f'Прочитаны данные из файла {path}')
+            logger.info(f"Прочитаны данные из файла {path}")
             return result
         except Exception as ex:
             logger.error(f"Ошибка:  {ex}")
             return pd.DataFrame()
     else:
-        logger.error(f"Файл не найден!")
+        logger.error("Файл не найден!")
         return pd.DataFrame()
 
 
@@ -38,9 +37,9 @@ def get_stock_price(stock: str) -> float:
         response = requests.get(url)
         result = response.json().get("Global Quote", None).get("05. price", None)
         result = round(float(result), 2)
-        logger.info(f'Получены данные с https://api.apilayer.com')
+        logger.info("Получены данные с https://api.apilayer.com")
     except Exception as ex:
-        logger.error(f'Ошибка получения данных с API - {ex}')
+        logger.error(f"Ошибка получения данных с API - {ex}")
         result = 0.0
     return result
 
@@ -53,9 +52,9 @@ def currency_exchange_rate(currency: str) -> float:
             f"https://api.apilayer.com/fixer/latest?base={currency.upper()}&symbols=RUB", params=params
         )
         result = float(response.json()["rates"]["RUB"])
-        logger.info(f'Получены данные с https://api.apilayer.com')
+        logger.info("Получены данные с https://api.apilayer.com")
     except Exception as ex:
-        logger.error(f'Ошибка получения данных с API - {ex}')
+        logger.error(f"Ошибка получения данных с API - {ex}")
     return result
 
 
@@ -69,5 +68,3 @@ def get_beginning_month(date: str) -> str:
         logger.error(ex)
         return ""
     return beginning.strftime("%d.%m.%Y %H:%M:%S")
-
-

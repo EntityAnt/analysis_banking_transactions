@@ -2,9 +2,10 @@ import os
 from datetime import datetime
 from pprint import pprint
 
-from src.utils import get_data_from_excel
-from src.views import get_greeting, get_all_expenses, get_top_n_transactions, get_exchange_rates, get_stocks_prices
 from dotenv import load_dotenv
+
+from src.utils import get_data_from_excel
+from src.views import get_all_expenses, get_exchange_rates, get_greeting, get_stocks_prices, get_top_n_transactions
 
 load_dotenv()
 PATH_TO_DATA = os.getenv("PATH_TO_DATA")
