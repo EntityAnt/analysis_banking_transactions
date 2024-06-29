@@ -15,7 +15,7 @@ logger = setup_logging(f'views.py - {datetime.today().strftime("%Y-%m-%d")}')
 
 
 def get_greeting(date: str) -> str:
-    """Принимает строку с датой и временем в формате (2024-01-01 00:00:00),
+    """Принимает строку с датой и временем в формате (dd-mm-YYYY HH:MM:SS),
     возвращает приветствие: «Доброе утро» / «Добрый день» / «Добрый вечер» / «Доброй ночи»"""
     hour = int(date.split()[1].split(":")[0])
     minute = int(date.split()[1].split(":")[1])
@@ -125,8 +125,8 @@ def get_stocks_prices(stocks: list = None) -> list[dict]:
     return result
 
 
-# if __name__ == "__main__":
-    # get_greeting('31.12.2021 16:44:00')
+if __name__ == "__main__":
+    get_greeting('31.12.2021 16:44:00')
     # df = get_data_from_excel(os.path.join(PATH_TO_DATA, 'operations.xlsx'))
     # print(get_all_expenses(df))
     # list_dict = get_stocks_prices()
