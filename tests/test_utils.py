@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 import pandas as pd
 
-from src.utils import get_data_from_excel, currency_exchange_rate, get_stock_price
+from src.utils import get_data_from_excel, currency_exchange_rate, get_stock_price, get_beginning_month
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -51,3 +51,8 @@ def test_get_stock_price(mock_get):
     assert get_stock_price("AAPL") == 210.62
     url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey={KEY_ALPHAVANTAGE}"
     mock_get.assert_called_once_with(url)
+
+
+def test_get_beginning_month():
+    assert get_beginning_month('') == ''
+    assert get_beginning_month('31.12.2021 15:44:39') == '01.12.2021 00:00:00'
