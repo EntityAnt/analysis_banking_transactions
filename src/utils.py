@@ -65,3 +65,6 @@ def round_to_limit(amount: float, limit: int) -> float:
     result = amount + (limit - amount % limit)
     logger.info(f'round_to_limit - сумма {amount}, лимит - {limit}, округлили до {result}')
     return round(result - amount, 2)
+
+
+print(round_to_limit(173, 50))
