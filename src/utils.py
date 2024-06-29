@@ -73,4 +73,4 @@ def get_beginning_month(date: str) -> str:
 
 
 # get_data_from_excel(os.path.join(PATH_TO_TESTS, 'test.xlsx'))
-print(get_stock_price('AAPL'))
+# print(get_stock_price('AAPL'))

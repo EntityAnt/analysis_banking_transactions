@@ -1,9 +1,7 @@
 import os.path
-from io import StringIO
 from unittest.mock import patch
 
-import pytest
-import pandas as pd
+
 
 from src.utils import get_data_from_excel, currency_exchange_rate, get_stock_price, get_beginning_month
 from dotenv import load_dotenv
