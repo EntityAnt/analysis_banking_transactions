@@ -14,9 +14,7 @@ PATH_TO_DATA = os.getenv("PATH_TO_DATA")
 logger = setup_logging(f'reports.py - {datetime.today().strftime("%Y-%m-%d")}')
 
 
-def write_to_file_without_name(func):
-
-
+def write_to_file_without_name(func) -> None:
     def inner(*args, **kwargs):
         name = f"{datetime.today().strftime('%d_%m_%Y')} - {func.__name__}.json"
         path = os.path.join(PATH_TO_DATA, name)
@@ -25,11 +23,10 @@ def write_to_file_without_name(func):
             file.write(result.to_json(force_ascii=False, indent=4, orient='records'))
             logger.info(f'Результат работы функции {func.__name__} записан в файл {name}')
 
-
     return inner
 
 
-def write_to_file_with_name(arg):
+def write_to_file_with_name(arg) -> None:
     def decorator(func):
         name = f"{arg}.xlsx"
         path = os.path.join(PATH_TO_DATA, name)
@@ -69,6 +66,7 @@ def spending_by_category(df: pd.DataFrame, category: str, date: str = None) -> p
 
     df["Дата платежа"] = pd.to_datetime(df["Дата платежа"], dayfirst=True)
     filtered_df_by_data = df[(df["Дата платежа"].between(start_date, end_date, inclusive="both"))]
+    pd.options.mode.chained_assignment = None
     filtered_df_by_data["Дата платежа"] = filtered_df_by_data["Дата платежа"].dt.strftime("%d.%m.%Y")
     filtered_df_by_category = filtered_df_by_data.loc[(filtered_df_by_data['Категория'] == category) &
                                                       (filtered_df_by_data['Сумма платежа'] < 0)]
@@ -76,9 +74,6 @@ def spending_by_category(df: pd.DataFrame, category: str, date: str = None) -> p
     return filtered_df_by_category
 
 
-
-
 if __name__ == "__main__":
-    # print(get_date_n_months_later('15.03.2018'))
     df = get_data_from_excel(os.path.join(os.getenv("PATH_TO_DATA"), "operations.xlsx"))
-    spending_by_category(df, 'Супермаркеты', '17.12.2021')
+    print(spending_by_category(df, 'Супермаркеты', '17.12.2021'))
