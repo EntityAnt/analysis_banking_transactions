@@ -10,6 +10,7 @@ from src.logger import setup_logging
 
 load_dotenv()
 PATH_TO_DATA = os.getenv("PATH_TO_DATA")
+PATH_TO_TESTS = os.getenv("PATH_TO_TESTS")
 
 logger = setup_logging(f'utils.py - {datetime.today().strftime("%Y-%m-%d")}')
 
@@ -69,4 +70,5 @@ def get_beginning_month(date: str) -> str:
         return ""
     return beginning.strftime("%d.%m.%Y %H:%M:%S")
 
-# get_data_from_excel(os.path.join(PATH_TO_DATA, 'o.xlsx'))
+
+get_data_from_excel(os.path.join(PATH_TO_TESTS, 'test.xlsx'))
