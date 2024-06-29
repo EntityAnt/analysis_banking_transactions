@@ -36,7 +36,7 @@ def get_date_n_months_later(str_date: str, n: int = 3) -> datetime:
         date = datetime.strptime(str_date, '%d.%m.%Y')
         new_date = date + relativedelta(months=-n)
     except Exception as ex:
-        print(ex)
+        logger.error(f'Некорректная дата {str_date} {ex}')
         return None
 
     return new_date
