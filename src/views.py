@@ -126,10 +126,9 @@ def get_stocks_prices(stocks: list = None) -> list[dict]:
 
 
 if __name__ == "__main__":
-    get_greeting('31.12.2021 16:44:00')
-    # df = get_data_from_excel(os.path.join(PATH_TO_DATA, 'test.xlsx'))
+    # get_greeting('31.12.2021 16:44:00')
     df = get_data_from_excel(os.path.join(PATH_TO_DATA, 'operations.xlsx'))
-    # get_all_expenses(df)
+    # print(get_all_expenses(df))
     # list_dict = get_stocks_prices()
     # pprint(list_dict, indent=4)
     # pprint(list_dict, indent=4, sort_dicts=False)
