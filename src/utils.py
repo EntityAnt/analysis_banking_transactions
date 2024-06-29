@@ -36,6 +36,7 @@ def get_stock_price(stock: str) -> float:
     url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock.upper()}&apikey={params}"
     try:
         response = requests.get(url)
+        print(response.json())
         result = response.json().get("Global Quote", None).get("05. price", None)
         result = round(float(result), 2)
         logger.info(f'Получены данные с https://api.apilayer.com')
@@ -71,4 +72,5 @@ def get_beginning_month(date: str) -> str:
     return beginning.strftime("%d.%m.%Y %H:%M:%S")
 
 
-get_data_from_excel(os.path.join(PATH_TO_TESTS, 'test.xlsx'))
+# get_data_from_excel(os.path.join(PATH_TO_TESTS, 'test.xlsx'))
+print(get_stock_price('AAPL'))
