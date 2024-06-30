@@ -8,7 +8,7 @@ PATH_TO_LOGS = os.getenv("PATH_TO_LOGS")
 
 
 def setup_logging(name: str) -> logging.Logger:
-    # logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    # logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
     file_handler = logging.FileHandler(os.path.join(PATH_TO_LOGS, f"{name}.log"), mode="w", encoding='utf-8')

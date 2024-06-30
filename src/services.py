@@ -50,9 +50,3 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
     return all_amount
 
 
-if __name__ == "__main__":
-    data = get_data_from_excel(os.path.join(os.getenv("PATH_TO_DATA"), "operations.xlsx"))
-    transactions = transactions_from_df(data)
-    analysis_categories_cashback(data, 2021, 10)
-    pprint(investment_bank("2018-10", transactions, 50), indent=4)
-    # print(get_start_end_month('2018-12-08'))

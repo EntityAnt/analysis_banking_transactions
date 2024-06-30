@@ -17,7 +17,7 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
     if os.path.isfile(path):
         try:
             result = pd.read_excel(path)
-            logger.info(f'Прочитаны данные из файла {path}')
+            logger.info(f'\nПрочитаны данные из файла {path}')
             return result
         except Exception as ex:
             logger.error(f"Ошибка:  {ex}")
@@ -67,4 +67,3 @@ def round_to_limit(amount: float, limit: int) -> float:
     return round(result - amount, 2)
 
 
-print(round_to_limit(173, 50))
