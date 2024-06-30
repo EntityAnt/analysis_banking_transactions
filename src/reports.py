@@ -3,10 +3,10 @@ from datetime import datetime
 
 import pandas as pd
 from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
 
 from src.logger import setup_logging
 from src.utils import get_data_from_excel, get_date_n_months_later
-from dotenv import load_dotenv
 
 load_dotenv()
 PATH_TO_DATA = os.getenv("PATH_TO_DATA")
