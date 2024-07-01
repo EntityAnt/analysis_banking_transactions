@@ -4,6 +4,8 @@ import pandas as pd
 import pytest
 from dotenv import load_dotenv
 
+from src.utils import transactions_from_df
+
 load_dotenv()
 
 PATH_TO_TESTS = os.getenv("PATH_TO_TESTS")
@@ -26,3 +28,6 @@ def get_full_df() -> pd.DataFrame:
     return pd.read_excel(path)
 
 
+@pytest.fixture()
+def get_full_transactions(get_full_df: pd.DataFrame) -> list[dict]:
+    return transactions_from_df(get_full_df)

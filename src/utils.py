@@ -44,6 +44,7 @@ def get_start_end_month(date: str) -> tuple():
 def transactions_from_df(df: pd.DataFrame) -> list[dict]:
     """Принимает DataFrame, возвращает список словарей с датой операции и суммой"""
     if df.empty:
+        logger.warning('Анализ кешбэка по категориям - DataFrame пуст!')
         return []
 
     data = df.to_dict(orient="records")
@@ -59,10 +60,6 @@ def transactions_from_df(df: pd.DataFrame) -> list[dict]:
         )
     logger.info('Сформированы данные с датой операции и суммой')
     return result
-
-
-df = get_data_from_excel(os.path.join(os.getenv('PATH_TO_TESTS'), "test1.xlsx"))
-print(transactions_from_df(df))
 
 
 def round_to_limit(amount: float, limit: int) -> float:

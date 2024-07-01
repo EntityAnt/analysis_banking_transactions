@@ -49,4 +49,7 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
     logger.info(f'С {start} по {end} удалось бы накопить {all_amount} руб.')
     return all_amount
 
+df = get_data_from_excel(os.path.join(os.getenv('PATH_TO_DATA'), "operations.xlsx"))
+transactions = transactions_from_df(df)
+print(investment_bank('2021-11', transactions, 100))
 
