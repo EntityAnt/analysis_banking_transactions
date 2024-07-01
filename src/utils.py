@@ -30,9 +30,9 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
 def get_start_end_month(date: str) -> tuple():
     """Принимает строку с датой в формате 'YYYY-MM-DD', возвращает кортеж с датами начала и конца месяца"""
 
-    start = datetime.strptime(date, "%Y-%m-%d")
-    year = start.year
-    month = start.month
+    year = datetime.strptime(date, "%Y-%m-%d").year
+    month = datetime.strptime(date, "%Y-%m-%d").month
+    start = datetime.strptime(f"{year}-{month}-01", "%Y-%m-%d")
     if month != 12:
         end = datetime.strptime(f"{year}-{month + 1}-01", "%Y-%m-%d") - timedelta(days=1)
     else:
@@ -43,6 +43,8 @@ def get_start_end_month(date: str) -> tuple():
 
 def transactions_from_df(df: pd.DataFrame) -> list[dict]:
     """Принимает DataFrame, возвращает список словарей с датой операции и суммой"""
+    if df.empty:
+        return []
 
     data = df.to_dict(orient="records")
     result = []
@@ -59,11 +61,13 @@ def transactions_from_df(df: pd.DataFrame) -> list[dict]:
     return result
 
 
+df = get_data_from_excel(os.path.join(os.getenv('PATH_TO_TESTS'), "test1.xlsx"))
+print(transactions_from_df(df))
+
+
 def round_to_limit(amount: float, limit: int) -> float:
     """Принимает сумму и лимит, до которого надо округлить,
     возвращает разницу между исходной и округленной суммами"""
     result = amount + (limit - amount % limit)
     logger.info(f'round_to_limit - сумма {amount}, лимит - {limit}, округлили до {result}')
     return round(result - amount, 2)
-
-
