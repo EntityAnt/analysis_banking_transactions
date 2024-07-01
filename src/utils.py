@@ -17,13 +17,13 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
     if os.path.isfile(path):
         try:
             result = pd.read_excel(path)
-            logger.info(f'\nПрочитаны данные из файла {path}')
+            logger.info(f"\nПрочитаны данные из файла {path}")
             return result
         except Exception as ex:
             logger.error(f"Ошибка:  {ex}")
             return pd.DataFrame()
     else:
-        logger.error(f"Файл не найден!")
+        logger.error("Файл не найден!")
         return pd.DataFrame()
 
 
@@ -44,7 +44,7 @@ def get_start_end_month(date: str) -> tuple():
 def transactions_from_df(df: pd.DataFrame) -> list[dict]:
     """Принимает DataFrame, возвращает список словарей с датой операции и суммой"""
     if df.empty:
-        logger.warning('Анализ кешбэка по категориям - DataFrame пуст!')
+        logger.warning("Анализ кешбэка по категориям - DataFrame пуст!")
         return []
 
     data = df.to_dict(orient="records")
@@ -58,7 +58,7 @@ def transactions_from_df(df: pd.DataFrame) -> list[dict]:
                 "Сумма операции": item.get("Сумма операции"),
             }
         )
-    logger.info('Сформированы данные с датой операции и суммой')
+    logger.info("Сформированы данные с датой операции и суммой")
     return result
 
 
@@ -66,5 +66,5 @@ def round_to_limit(amount: float, limit: int) -> float:
     """Принимает сумму и лимит, до которого надо округлить,
     возвращает разницу между исходной и округленной суммами"""
     result = amount + (limit - amount % limit)
-    logger.info(f'round_to_limit - сумма {amount}, лимит - {limit}, округлили до {result}')
+    logger.info(f"round_to_limit - сумма {amount}, лимит - {limit}, округлили до {result}")
     return round(result - amount, 2)

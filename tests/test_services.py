@@ -14,13 +14,13 @@ def test_analysis_categories_cashback(get_empty_df: pd.DataFrame, get_full_df: p
 
 
 @pytest.mark.parametrize(
-    'month, limit, expected', [
-        ('2021-11', 10, 1186.79),
-        ('2021-11', 50, 4996.79),
-        ('2021-11', 100, 10096.789999999997),
-        ('2024-11', 10, 0),
-    ]
+    "month, limit, expected",
+    [
+        ("2021-11", 10, 1186.79),
+        ("2021-11", 50, 4996.79),
+        ("2021-11", 100, 10096.789999999997),
+        ("2024-11", 10, 0),
+    ],
 )
 def test_investment_bank(month, get_full_transactions: list[dict], limit, expected) -> None:
     assert investment_bank(month, get_full_transactions, limit) == expected
-
