@@ -45,8 +45,8 @@ def get_date_n_months_later(str_date: str, n: int = 3) -> datetime:
 def str_title(string: str) -> str:
     """Принимает строку и возвращает строку, где только первая буква
     первого слова заглавная, остальные - прописные"""
-    if string == '':
-        return ''
+    if string == "":
+        return ""
     result = string.split()
     if len(result) == 1:
         return result[0].title()
