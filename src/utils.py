@@ -31,7 +31,7 @@ def get_data_from_excel(path: str) -> pd.DataFrame:
 def get_date_n_months_later(str_date: str, n: int = 3) -> datetime:
     """Принимает строку с датой в формате DD.MM.YYYY, возвращает дату n-месяцами ранее
     Функция отнимает n месяцев, но не n*30 дней. От 31 и 30 мая, при n=3 получаем 28 февраля
-    (если год не весокосный)"""
+    (если год не високосный)"""
     try:
         date = datetime.strptime(str_date, "%d.%m.%Y")
         new_date = date + relativedelta(months=-n)
@@ -45,6 +45,8 @@ def get_date_n_months_later(str_date: str, n: int = 3) -> datetime:
 def str_title(string: str) -> str:
     """Принимает строку и возвращает строку, где только первая буква
     первого слова заглавная, остальные - прописные"""
+    if string == '':
+        return ''
     result = string.split()
     if len(result) == 1:
         return result[0].title()
@@ -53,7 +55,3 @@ def str_title(string: str) -> str:
     result = first_word + " " + others_words.lower()
 
     return result
-
-
-# get_data_from_excel(os.path.join(PATH_TO_DATA, 'o.xlsx'))
-# print(get_date_n_months_later('31.05.2024', 3))
