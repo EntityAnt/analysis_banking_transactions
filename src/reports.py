@@ -6,7 +6,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from src.logger import setup_logging
-from src.utils import get_date_n_months_later
+from src.utils import get_date_n_months_later, get_data_from_excel
 
 load_dotenv()
 PATH_TO_DATA = os.getenv("PATH_TO_DATA")
@@ -73,3 +73,7 @@ def spending_by_category(df: pd.DataFrame, category: str, date: str = None) -> p
     ]
     logger.info(f"Сформированы данные по категории {category} за период с {start_date} по {end_date}")
     return filtered_df_by_category
+
+
+df = get_data_from_excel(os.path.join(PATH_TO_DATA, "test2.xlsx"))
+print(type(spending_by_category(df, 'Супермаркеты', '30.12.2021')))
